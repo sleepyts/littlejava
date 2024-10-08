@@ -1,0 +1,29 @@
+spring:
+  data:
+    redis:
+      host: 111.230.11.195
+      port: 8888
+      database: 1
+      lettuce:
+        pool:
+          max-active: 10
+          max-idle: 10
+          min-idle: 1
+          time-between-eviction-runs: 10s
+  rabbitmq:
+    host: 8.136.110.151
+    port: 5672
+    username: newuser
+    password: password123
+  kafka:
+    bootstrap-servers: 69.165.67.41:9092  # Kafka 服务器地址
+    consumer:
+      group-id: my-group  # 消费者组ID
+      auto-offset-reset: earliest  # 消费者从最早的消息开始消费
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+  jackson:
+    default-property-inclusion: non_null
