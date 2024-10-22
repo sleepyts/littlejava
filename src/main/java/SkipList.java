@@ -23,6 +23,7 @@ public class SkipList<E extends Comparable<E>> {
         initHeads();
     }
 
+    // 构造函数
     SkipList(int ORDER_WAY) {
         initHeads();
         if (ORDER_WAY != DESC && ORDER_WAY != ASC)
@@ -129,6 +130,10 @@ public class SkipList<E extends Comparable<E>> {
             Node<E> prevRemove = removeStack.removeLast();
             prevRemove.next = prevRemove.next.next;
         }
+    }
+
+    public boolean isEmpty() {
+        return size == 0;
     }
 
     public boolean contains(E val) {

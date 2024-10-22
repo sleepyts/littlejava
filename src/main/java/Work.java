@@ -1,17 +1,20 @@
-import cn.hutool.core.util.RandomUtil;
-import org.springframework.scheduling.quartz.LocalDataSourceJobStore;
-import reactor.core.publisher.Mono;
-
-import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Map;
+import java.util.Collections;
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
-import java.util.concurrent.*;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.Stack;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ForkJoinPool;
+
+import cn.hutool.core.lang.Pair;
+import cn.hutool.core.util.RandomUtil;
 
 public class Work {
     public static void main(String[] args) {
-        X3T10();
+
     }
 
     /**
@@ -71,25 +74,25 @@ public class Work {
      * 匹配成功，模式 abcac 在文本中的位置为 8。
      */
 
-    public static void X3T9(){
-        enum Color{
+    public static void X3T9() {
+        enum Color {
             R,
             W,
             B,
         }
-        int n=100;
-        Color[] colors=new Color[n];
+        int n = 100;
+        Color[] colors = new Color[n];
         for (int i = 0; i < n; i++) {
-            colors[i]=(Color.values()[new Random().nextInt(0,3)]);
+            colors[i] = (Color.values()[new Random().nextInt(0, 3)]);
         }
-        int left=-1,right=n,p=0,pivot=Color.W.ordinal();
-        while(p<right){
-            if (colors[p].ordinal()<pivot){
-                swap(colors,++left,p++);
-            }else if (colors[p].ordinal()==pivot){
+        int left = -1, right = n, p = 0, pivot = Color.W.ordinal();
+        while (p < right) {
+            if (colors[p].ordinal() < pivot) {
+                swap(colors, ++left, p++);
+            } else if (colors[p].ordinal() == pivot) {
                 p++;
-            }else{
-                swap(colors,--right,p);
+            } else {
+                swap(colors, --right, p);
             }
         }
         System.out.println(Arrays.toString(colors));
@@ -98,42 +101,46 @@ public class Work {
     /**
      * 时间复杂度O(N²)
      */
-    public static void X3T10(){
-        class Point{
+    public static void X3T10() {
+        class Point {
             float[] arrs;
-            Point(int k){
-                arrs=new float[k];
+
+            Point(int k) {
+                arrs = new float[k];
             }
-            float calD(Point p){
-                float sum=0;
-                for (int i=0;i<arrs.length;i++){
-                    sum+= Math.pow(arrs[i]-p.arrs[i],2);
+
+            float calD(Point p) {
+                float sum = 0;
+                for (int i = 0; i < arrs.length; i++) {
+                    sum += Math.pow(arrs[i] - p.arrs[i], 2);
                 }
-                return (float) Math.pow(sum,0.5);
+                return (float) Math.pow(sum, 0.5);
             }
         }
-        int k=4,n=20;
-        float minD=Float.MAX_VALUE;
-        Point[] points=new Point[20];
+        int k = 4, n = 20;
+        float minD = Float.MAX_VALUE;
+        Point[] points = new Point[20];
         for (int i = 0; i < n; i++) {
             Point point = new Point(k);
             for (int j = 0; j < k; j++)
-                point.arrs[j]=new Random().nextFloat(1000f);
-            points[i]=point;
+                point.arrs[j] = new Random().nextFloat(1000f);
+            points[i] = point;
         }
         for (int i = 0; i < n; i++) {
-            for (int j = i+1; j < n; j++) {
-                minD=Math.min(minD,points[i].calD(points[j]));
+            for (int j = i + 1; j < n; j++) {
+                minD = Math.min(minD, points[i].calD(points[j]));
             }
         }
         System.out.println(minD);
     }
-    private static void swap(Object[] arr, int i, int j){
-        Object temp=arr[i];
-        arr[i]=arr[j];
-        arr[j]=temp;
+
+    private static void swap(Object[] arr, int i, int j) {
+        Object temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
     }
 }
+
 class MatrixVectorMultiplication {
     public static double[] rowMajorMultiplication(double[][] matrix, double[] vector) {
         int N = matrix.length;
@@ -146,11 +153,11 @@ class MatrixVectorMultiplication {
         }
         return result;
     }
+
     // 列优先访问矩阵与向量相乘
     public static double[] columnMajorMultiplication(double[][] matrix, double[] vector) {
         int N = matrix.length;
         double[] result = new double[N];
-
 
         for (int j = 0; j < N; j++) {
             for (int i = 0; i < N; i++) {
@@ -160,9 +167,11 @@ class MatrixVectorMultiplication {
 
         return result;
     }
-    public static void blockMatrixMultiply(double[][] A, double[][] B, int N, int blockSize) throws ExecutionException, InterruptedException {
+
+    public static void blockMatrixMultiply(double[][] A, double[][] B, int N, int blockSize)
+            throws ExecutionException, InterruptedException {
         ForkJoinPool pool = new ForkJoinPool();
-        double[][] C=new double[N][N];
+        double[][] C = new double[N][N];
         pool.submit(() -> {
             for (int ii = 0; ii < N; ii += blockSize) {
                 for (int jj = 0; jj < N; jj += blockSize) {
@@ -185,40 +194,156 @@ class MatrixVectorMultiplication {
             }
         }).get(); // 等待所有任务完成
     }
-    public static void fun2(int n,int blockSize) throws ExecutionException, InterruptedException {
-        double[][] A=new double[n][n],B=new double[n][n];
+
+    public static void fun2(int n, int blockSize) throws ExecutionException, InterruptedException {
+        double[][] A = new double[n][n], B = new double[n][n];
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                A[i][j]=RandomUtil.randomDouble();
-                B[i][j]=RandomUtil.randomDouble();
+                A[i][j] = RandomUtil.randomDouble();
+                B[i][j] = RandomUtil.randomDouble();
             }
         }
-        long start=System.nanoTime();
-        blockMatrixMultiply(A,B,n,blockSize);
-        System.out.printf("矩阵大小为%d,分块大小为%d,运算时间:%s\n",n,blockSize,(System.nanoTime()-start)/1_000_000.0+"ms");
+        long start = System.nanoTime();
+        blockMatrixMultiply(A, B, n, blockSize);
+        System.out.printf("矩阵大小为%d,分块大小为%d,运算时间:%s\n", n, blockSize, (System.nanoTime() - start) / 1_000_000.0 + "ms");
     }
-    public static void main(String[] args) throws ExecutionException, InterruptedException {
-//        int n=16384;
-//        double [][] mat=new double[n][n];
-//        double [] vec=new double[n];
-//        for (int i = 0; i < n; i++) {
-//            vec[i]=RandomUtil.randomDouble();
-//            for (int j = 0; j < n; j++) {
-//                mat[i][j]= RandomUtil.randomDouble();
-//            }
-//        }
-//        long start=System.nanoTime();
-//        rowMajorMultiplication(mat,vec);
-//        System.out.println((System.nanoTime()-start)/1_000_000.0+"ms");
-//        start=System.nanoTime();
-//        columnMajorMultiplication(mat,vec);
-//        System.out.println((System.nanoTime()-start)/1_000_000.0+"ms");
-        fun2(4096,128);
-        fun2(4096,64);
-        fun2(4096,32);
-        fun2(4096,16);
-        fun2(4096,8);
-        fun2(4096,4);
 
+    public static void main(String[] args) throws ExecutionException, InterruptedException {
+        // int n=16384;
+        // double [][] mat=new double[n][n];
+        // double [] vec=new double[n];
+        // for (int i = 0; i < n; i++) {
+        // vec[i]=RandomUtil.randomDouble();
+        // for (int j = 0; j < n; j++) {
+        // mat[i][j]= RandomUtil.randomDouble();
+        // }
+        // }
+        // long start=System.nanoTime();
+        // rowMajorMultiplication(mat,vec);
+        // System.out.println((System.nanoTime()-start)/1_000_000.0+"ms");
+        // start=System.nanoTime();
+        // columnMajorMultiplication(mat,vec);
+        // System.out.println((System.nanoTime()-start)/1_000_000.0+"ms");
+        fun2(4096, 128);
+        fun2(4096, 64);
+        fun2(4096, 32);
+        fun2(4096, 16);
+        fun2(4096, 8);
+
+        fun2(4096, 4);
     }
+
+    public List<String> generateParenthesis(int n) {
+        class func {
+            static int n;
+            static List<String> ans = new ArrayList<>();
+
+            static void dfs(int p, StringBuilder cur, int l, int r) {
+
+                if (p == n * 2) {
+                    ans.add(cur.toString());
+                    return;
+                }
+
+                if (l < n) {
+                    cur.append("(");
+                    dfs(p + 1, cur, l + 1, r);
+                    cur.deleteCharAt(cur.length() - 1);
+                }
+                if (r < l) {
+                    cur.append(")");
+                    dfs(p + 1, cur, l, r + 1);
+                    cur.deleteCharAt(cur.length() - 1);
+                }
+            }
+        }
+        func.n = n;
+        func.dfs(0, new StringBuilder(""), 0, 0);
+        return func.ans;
+    }
+
+    class Pair {
+        Integer k;
+        Integer v;
+
+        public Pair(Integer _k, Integer _v) {
+            k = _k;
+            v = _v;
+        }
+    }
+
+    public int[] dailyTemperatures(int[] temperatures) {
+        int[] ans = new int[temperatures.length];
+        Deque<Pair> deque = new LinkedList<>();
+        deque.push(new Pair(-1, Integer.MAX_VALUE));
+        for (int i = ans.length - 1; i >= 0; i--) {
+            while (deque.peekFirst().v <= temperatures[i]) {
+                deque.pollFirst();
+            }
+            if (deque.peekFirst().v == Integer.MAX_VALUE)
+                ans[i] = 0;
+            else {
+                ans[i] = deque.peekFirst().k - i;
+            }
+            deque.push(new Pair(i, temperatures[i]));
+        }
+        return ans;
+    }
+
+    int ptr;
+
+    public String decodeString(String s) {
+        LinkedList<String> stk = new LinkedList<String>();
+        ptr = 0;
+
+        while (ptr < s.length()) {
+            char cur = s.charAt(ptr);
+            if (Character.isDigit(cur)) {
+                // 获取一个数字并进栈
+                String digits = getDigits(s);
+                stk.addLast(digits);
+            } else if (Character.isLetter(cur) || cur == '[') {
+                // 获取一个字母并进栈
+                stk.addLast(String.valueOf(s.charAt(ptr++)));
+            } else {
+                ++ptr;
+                LinkedList<String> sub = new LinkedList<String>();
+                while (!"[".equals(stk.peekLast())) {
+                    sub.addLast(stk.removeLast());
+                }
+                Collections.reverse(sub);
+                // 左括号出栈
+                stk.removeLast();
+                // 此时栈顶为当前 sub 对应的字符串应该出现的次数
+                int repTime = Integer.parseInt(stk.removeLast());
+                StringBuffer t = new StringBuffer();
+                String o = getString(sub);
+                // 构造字符串
+                while (repTime-- > 0) {
+                    t.append(o);
+                }
+                // 将构造好的字符串入栈
+                stk.addLast(t.toString());
+            }
+        }
+
+        return getString(stk);
+    }
+
+    public String getDigits(String s) {
+        StringBuffer ret = new StringBuffer();
+        while (Character.isDigit(s.charAt(ptr))) {
+            ret.append(s.charAt(ptr++));
+        }
+        return ret.toString();
+    }
+
+    public String getString(LinkedList<String> v) {
+        StringBuffer ret = new StringBuffer();
+        for (String s : v) {
+            ret.append(s);
+        }
+        return ret.toString();
+    }
+
 }

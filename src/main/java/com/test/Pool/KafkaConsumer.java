@@ -1,14 +1,11 @@
 package com.test.Pool;
 
 
-import cn.hutool.json.JSONUtil;
-import com.test.Config.KafkaConfig;
-
-import com.test.Domain.MyObject;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Component
 @Slf4j

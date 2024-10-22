@@ -1,4 +1,4 @@
-package com.Threads;
+package com.test.Threads;
 
 public class ThreadPrint extends Thread{
     public volatile static Object lock = new Object();

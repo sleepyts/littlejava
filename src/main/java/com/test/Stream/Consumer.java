@@ -1,9 +1,11 @@
 package com.test.Stream;
 
-import com.test.Config.RabbitMqConfig;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
+
+import com.test.Controller.Config.RabbitMqConfig;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component

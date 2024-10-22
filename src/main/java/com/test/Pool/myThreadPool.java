@@ -1,4 +1,4 @@
-package com.Pool;
+package com.test.Pool;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

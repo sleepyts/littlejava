@@ -3,7 +3,7 @@
 public class SkipListTest {
 
     public static void main(String[] args) throws InterruptedException {
-        int loop = 200000;
+        int loop = 50000;
         Random random = new Random();
         SkipList<Integer> skipList = new SkipList<>();
         List<Integer> list = new ArrayList<>();
@@ -12,19 +12,13 @@ public class SkipListTest {
         long listStartTime = System.currentTimeMillis();
         for (int i = 0; i < loop; i++) {
             int value = random.nextInt(1000000);
-            int addIndex=0;
-            for(int j = 0; j < list.size(); j++){
-                if(list.get(j) > value){
-                    addIndex = j;
-                    break;
-                }
-            }
-            list.add(addIndex, value);
+            list.add(value);
             if (i % (loop / 100) == 0) {
                 System.out.printf("List添加进度：%d%%\r", i / (loop / 100));
             }
         }
         System.out.println("List添加进度：100%");
+        
         System.out.println("List添加耗时：" + (System.currentTimeMillis() - listStartTime) + "ms");
 
         // Adding elements with progress display

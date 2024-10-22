@@ -68,5 +68,10 @@
             <groupId>org.springframework.kafka</groupId>
             <artifactId>spring-kafka</artifactId>
         </dependency>
+        <dependency>
+            <groupId>am.ik.webhook</groupId>
+            <artifactId>webhook-verifier</artifactId>
+            <version>0.1.2</version>
+        </dependency>
     </dependencies>
 </project>

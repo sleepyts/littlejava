@@ -1,16 +1,21 @@
 import com.google.common.primitives.Doubles;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
+import java.util.Arrays;
 import java.util.Random;
 
+@Data
 public class RandomDataGenerator {
 
     public static void main(String[] args) {
-        double target = 50.0;      // 目标数值
-        double tolerance = 30.0;   // 公差范围
+        double target = 50.0; // 目标数值
+        double tolerance = 30.0; // 公差范围
+
         double[] randomData = generateRandomData(target, tolerance);
 
-        // 打印生成的数据
-
+        Arrays.stream(randomData).forEach(System.out::println);
     }
 
     public static double[] generateRandomData(double target, double tolerance) {
