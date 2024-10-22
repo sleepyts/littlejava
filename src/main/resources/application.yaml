@@ -15,6 +15,8 @@ spring:
     port: 5672
     username: newuser
     password: password123
+
+    
   kafka:
     bootstrap-servers: 69.165.67.41:9092  # Kafka 服务器地址
     consumer:
