@@ -5,16 +5,14 @@ import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
-import java.util.Stack;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
 
-import cn.hutool.core.lang.Pair;
 import cn.hutool.core.util.RandomUtil;
 
 public class Work {
     public static void main(String[] args) {
-
+        X5T2();
     }
 
     /**
@@ -75,6 +73,7 @@ public class Work {
      */
 
     public static void X3T9() {
+        //
         enum Color {
             R,
             W,
@@ -138,6 +137,92 @@ public class Work {
         Object temp = arr[i];
         arr[i] = arr[j];
         arr[j] = temp;
+    }
+
+    public static void X5T1() {
+        class fun {
+
+            static int find(int[] arr, int l, int r, int target) {
+                if (l > r) {
+                    return -1;
+                }
+                int mid = (l + r) / 2;
+                if (arr[mid] == target) {
+                    return mid;
+                } else if (arr[mid] > target) {
+                    return find(arr, l, mid - 1, target);
+                } else {
+                    return find(arr, mid + 1, r, target);
+                }
+
+            }
+        }
+        int[] arr = new int[20];
+        for (int i = 0; i < arr.length; i++) {
+            arr[i] = RandomUtil.randomInt(100);
+        }
+        Arrays.sort(arr);
+        System.out.println(Arrays.toString(arr));
+        System.out.println(fun.find(arr, 0, arr.length, 10));
+    }
+
+    public static void X5T2() {
+        class maxHeap {
+            int[] heap;
+            int size;
+
+            // 建堆 O(n)
+            public maxHeap(int[] arr) {
+                heap = arr;
+                size = arr.length;
+                for (int i = size / 2 - 1; i >= 0; i--) {
+                    modify(i);
+                }
+            }
+
+            // 调整堆 O(logn)
+            public void modify(int k) {
+                while (2 * k + 1 < size) {
+                    int j = 2 * k + 1;
+                    if (j + 1 < size && heap[j + 1] > heap[j]) {
+                        j++;
+                    }
+                    if (heap[k] >= heap[j]) {
+                        break;
+                    }
+                    swap(heap, k, j);
+                    k = j;
+                }
+            }
+
+            public void remove(int index) {
+                swap(heap, index, size - 1);
+                size--;
+                modify(index);
+            }
+
+            private void swap(int[] arr, int i, int j) {
+                int temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+            }
+
+            @Override
+            public String toString() {
+                return Arrays.toString(Arrays.copyOfRange(heap, 0, size));
+            }
+
+        }
+        int[] arr = new int[7];
+        for (int i = 0; i < arr.length; i++) {
+            arr[i] = RandomUtil.randomInt(100);
+        }
+        arr[0] = 10;
+        System.out.println(Arrays.toString(arr));
+        maxHeap heap = new maxHeap(arr);
+        System.out.println(heap);
+        heap.remove(3);
+        System.out.println(heap);
     }
 }
 
@@ -346,4 +431,70 @@ class MatrixVectorMultiplication {
         return ret.toString();
     }
 
+    public List<List<String>> partitionLoop(String s) {
+        class func {
+            static List<List<String>> ans = new ArrayList<>();
+            static List<String> path = new ArrayList<>();
+            static boolean[][] dp;
+
+            static void solution(String s) {
+                dp = new boolean[s.length()][s.length()];
+                for (int i = 0; i < dp.length; i++) {
+                    Arrays.fill(dp[i], false);
+                }
+                for (int len = 2; len < s.length(); len++) {
+                    for (int l = 0; l < s.length() - len; l++) {
+                        int r = len + l - 1;
+                        dp[l][r] = s.charAt(l) == s.charAt(r) && dp[l + 1][r - 1];
+                    }
+                }
+                dfs(s, 0);
+            }
+
+            static void dfs(String s, int i) {
+                if (i == s.length()) {
+                    ans.add(new ArrayList<>(path));
+                    return;
+                }
+                for (int j = i + 1; j < s.length(); j++) {
+                    if (dp[i][j]) {
+                        path.add(s.substring(i, j + 1));
+                        dfs(s, j + 1);
+                        path.remove(path.size() - 1);
+                    }
+                }
+            }
+        }
+        func.solution(s);
+        return func.ans;
+    }
+
+    public ListNode sortList(ListNode head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+        ListNode slow = head, fast = head.next, mid = null;
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        mid = slow.next;
+        slow.next = null;
+        head = sortList(head);
+        mid = sortList(mid);
+        ListNode res = new ListNode(0), cur = res;
+        while (head != null && mid != null) {
+            if (head.val < mid.val) {
+                cur.next = head;
+                head = head.next;
+            } else {
+                cur.next = mid;
+                mid = mid.next;
+            }
+            cur = cur.next;
+        }
+        cur.next = head == null ? mid : head;
+        return head;
+
+    }
 }

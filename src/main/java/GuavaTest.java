@@ -10,6 +10,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.io.Console;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -20,18 +21,26 @@ import static javax.xml.crypto.dsig.SignatureMethod.SHA256_RSA_MGF1;
 public class GuavaTest {
 
     public static void main(String[] args) {
-        String signature="sha256=757107ea0eb2509fc211221cce984b8a37570b6d7586c22c46f4379c8b043e17";
-        String payload="Hello, World";
-        System.out.println(payload);
-        System.out.println(verifySignature(signature,payload));
+        Map<String, String> mp = new HashMap<>();
+        mp.put(HMAC_SHA256, SHA256_RSA_MGF1);
+        // HashMap put 流程:
+        /**
+         * 获取key的hashcode 对其进行hash操作并对底层数组长度取余得到哈希槽
+         * 判断当前哈希槽是否含有元素 不含有则直接加入
+         * 含有则先遍历这个哈希槽的链表（红黑树）来用equals方法查询是否有元素与其相等 相等则直接替换 没有相等的则产生哈希冲突
+         * 采用尾插法将当前元素插入到链表中 如果链表长度大于8且数组长度小于64则变成红黑树
+         * 如果插入后含有元素的哈希槽的数量大于总体数组的数量*负载因子（通常为0.75）则会开始扩容
+         * 扩容时会先将数组的大小扩充为原来的2倍 然后将每个Key的hashcode与当前数组长度相与获得新的哈希槽位置 然后开始转移元素
+         */
     }
 
     private static boolean verifySignature(String signature, String payload) {
         // 提取签名值（去掉 sha256=）
         signature = signature.replace("sha256=", "");
         try {
-        // 使用 GitHub 提供的 secret 创建 HMAC 密钥
-        SecretKeySpec keySpec = new SecretKeySpec("It's a Secret to Everybody".getBytes(StandardCharsets.UTF_8), "HmacSHA256");
+            // 使用 GitHub 提供的 secret 创建 HMAC 密钥
+            SecretKeySpec keySpec = new SecretKeySpec("It's a Secret to Everybody".getBytes(StandardCharsets.UTF_8),
+                    "HmacSHA256");
 
             Mac mac = Mac.getInstance("HmacSHA256");
             mac.init(keySpec);
@@ -46,6 +55,7 @@ public class GuavaTest {
             return false;
         }
     }
+
     private static String bytesToHex(byte[] bytes) {
         StringBuilder hexString = new StringBuilder();
         for (byte b : bytes) {

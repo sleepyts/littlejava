@@ -1,4 +1,4 @@
-package com.test.Controller.Config;
+package com.test.Config;
 
 import com.test.Domain.Role;
 import org.springframework.beans.factory.config.BeanDefinition;

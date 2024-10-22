@@ -1,4 +1,4 @@
-package com.test.Controller.Config;
+package com.test.Config;
 
 import org.springframework.stereotype.Component;
 
