@@ -5,3 +5,4 @@ test.sql
 1.html
 /.vscode/
 /.fleet/
+*.class
